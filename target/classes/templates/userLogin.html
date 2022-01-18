@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+<style>
+    .details {
+    width: 250px;
+	border: 10px solid navy;
+	padding: 50px;
+	margin: 20px;
+	border
+    }
+</style>
+</head>
+<body>
+<a href="/dashboard">
+    <button style="background-color:maroon;color:white;width:150px;height:40px;">Home</button>
+</a>
+<div align="center">
+    <div th:if="${param.error}" class="alert alert-danger">
+        <h2 align="center">Invalid username and
+            password</h2>
+    </div>
+    <div th:if="${param.logout}" class="alert alert-success">
+        <h2 align="center">You are successfully
+            logged
+            out</h2>
+    </div>
+    <div class = "details">
+    <form th:action="@{/checkLogin}" method="post">
+        <label for="email"><h4 >Email</h4></label>
+        <input type="email" id="email" name="email" placeholder="Your Email"
+               required>
+        <label for="password"><h4>Password</h4></label>
+        <input type="password" id="password" name="password" placeholder="Your Password"
+               required><br><br>
+        <input style="background-color: green;" type="submit" value="Login"><br><br>
+    </form>
+    <div>Don't have account? <a href="/register">
+        <button style="background-color: green;" >Sign Up</button>
+    </a></div>
+    </div>
+</div>
+</body>
+</html>

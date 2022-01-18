@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="https://thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <style>
+        .container {
+        border:3px solid black;
+        margin-right: 100px;
+        margin-left: 100px;
+        }
+        .addPost {
+        border:5px solid black;
+        margin-left: 850px;
+        margin-right: 100px;
+        }
+        .table {
+        margin-left: 110px;
+        }
+        .inner {
+        margin-left: 10px;
+        }
+        .next {
+        margin-right: 800px;
+        }
+        .clear {
+        margin-left: 200px;
+        }
+        #blog-content {
+        display: grid;
+	    grid-gap: 5px;
+        grid-template-columns: 1fr 3fr;
+}
+#sidebar{
+   display: flex;
+   flex-direction: column;
+   margin-top: 50px;
+   gap: 5px;
+   margin-bottom: 10px;
+   padding-left: 10px;
+}
+#content {
+display: flex;
+   flex-direction: column;
+   margin-top: 10px;
+   gap: 5px;
+   margin-bottom: 10px;
+   padding-left: 10px;
+}
+.footer-page {
+display :flex;
+justify-content:space-between;
+padding:0 5vw;
+
+    </style>
+    <script>
+    function add(key, value){
+       let url = new URL(window.location);
+	let queryString = window.location.href;
+	if(queryString.indexOf(key+'='+value) > 0) {
+    	window.location.href = url;
+	} else {
+	    url.searchParams.append(key, value);
+        window.location.href = url;
+	}
+    }
+    function sortByTime(value1,value2){
+let url=new URL(window.location);
+let queryString= window.location.href;
+if(queryString.indexOf('sortField='+value1) > 0) {
+url.searchParams.delete("sortDirection");
+url.searchParams.append("sortDirection", value2);
+window.location.href = url;
+} else {
+url.searchParams.append("sortField", value1);
+url.searchParams.append("sortDirection", value2);
+window.location.href = url;
+}
+}
+function sendingDates(){
+    let dateFrom= document.getElementById("dateFrom").value;
+    let dateTo= document.getElementById("dateTo").value;
+    let url=new URL(window.location);
+    url.searchParams.append("dateFrom", dateFrom);
+    url.searchParams.append("dateTo", dateTo);
+    window.location.href = url;
+}
+function pageNext(key,value){
+let url=new URL(window.location);
+let queryString= window.location.href;
+let intValue=parseInt(value);
+if(queryString.indexOf(key+'='+(intValue-1)) > 0){
+console.log("hello world next if");
+queryString.replace(key+"="+(intValue-1),key+"="+intValue);
+window.location.href = queryString;
+}else{
+console.log("hello world next else");
+url.searchParams.append(key,value);
+window.location.href = url;
+}
+}
+function pagePrevious(key,value){
+let url=new URL(window.location);
+let queryString= window.location.href;
+let intValue=parseInt(value);
+if(queryString.indexOf(key+'='+(intValue+1)) > 0){
+console.log("hello world previous if");
+(window.location.href).replace(key+"="+(intValue+1),key+"="+intValue);
+}else{
+console.log("hello world previous else");
+url.searchParams.append(key,value);
+window.location.href = url;
+}
+}
+ </script>
+</head>
+<body style="background-color:#e9e9e9;">
+<main id="blog-content">
+    <!-- Sidebar -->
+    <aside id="sidebar">
+        <section>
+            <div class="search">
+                <form action="/dashboard" method="get">
+                    <input name="search" placeholder="Enter to search" type="text">
+                    <input style="background-color:green;height:30px" type="submit" value="Search">
+                    <br>
+                </form>
+            </div>
+        </section>
+        <section>
+            Filter By Tags:
+            <ul>
+                <li th:each="tag:${tags}">
+                    <input name="filters" onclick="add('filters',this.value)" th:text="${tag}" th:value="${tag}"
+                           type="checkbox" />
+                </li>
+            </ul>
+        </section>
+        <section>
+            Filter By Authors:
+            <ul>
+                <li th:each="author:${authors}">
+                    <input name="filters" onclick="add('filters',this.value)" th:text="${author}"
+                           th:value="${author}"
+                           type="checkbox"/>
+                </li>
+            </ul>
+        </section>
+        <section>
+            <form onsubmit="sendingDate()">
+                Enter Start Date:<br>
+                <input id="dateFrom" name="dateFrom" type="datetime-local"><br>
+                <br>
+                Enter End Date:<br>
+                <input id="dateTo" name="dateTo" type="datetime-local"><br>
+                <br>
+                <input type="submit" value="Filter By Date" onclick="sendingDates()"><br>
+            </form>
+            <br>
+            <form action="/reset"><input type="submit" value="Reset"></form>
+        </section>
+    </aside>
+    <!-- content -->
+    <article id="content">
+        <section>
+            <table align="right">
+                <td>
+                    <a th:href="@{/addPost}">
+                        <button style="background-color:maroon;color:white;width:150px;height:40px;">Add Post</button>
+                        <!--                        <button class="btn btn-primary">Add Post</button>-->
+                    </a>
+                </td>
+                <td>
+                    <span sec:authorize = "isAnonymous()">
+                    <a href="/login">
+                        <button style="background-color:maroon;color:white;width:150px;height:40px;">Login</button>
+                    </a>
+                    </span>
+                </td>
+                <td>
+                    <span sec:authorize = "isAnonymous()">
+                    <a href="/register">
+                        <button style="background-color:maroon;color:white;width:150px;height:40px;">Sign UP</button>
+                    </a>
+                    </span>
+                </td>
+                <td>
+                     <span sec:authorize = "isAuthenticated()">
+                    <a href="/logout">
+                        <button style="background-color:maroon;color:white;width:150px;height:40px;">Logout</button>
+                    </a>
+                     </span>
+                    </div>
+                </td>
+            </table>
+        </section>
+        <section>
+            <div align="right">[[${#request.remoteUser}]]</div>
+            <div align="left">
+                    <button th:value="${reverseSortDirection}" onclick="sortByTime('publishedAt',this.value)"
+                            style="background-color:mediumpurple;color:white;width:150px;height:40px;">Sort By
+                        Time
+                    </button>
+            </div>
+        </section>
+        <section>
+            <h1 align="center" style="background-color:dimgray;color:white;height:50px">Published Posts</h1>
+            <br><br>
+        </section>
+        <section>
+            <div th:each="post : ${posts}">
+                <div class="container">
+                    <span hidden th:text="${post.id}"></span><br>
+                    <div class="inner">
+                        Title: <span th:text="${post.title}"></span><br>
+                        Author:<span th:text="${post.author}"></span><br>
+                        Excerpt: <span th:text="${post.excerpt}"></span><br>
+                        Published: <span th:text="${post.publishedAt}"></span><br>
+                        <table>
+                            <div th:if="${username} eq ${post.author} or ${username} eq ${admin}">
+                                <a th:href="@{/update/{id}(id=${post.id})}">Update</a>
+                                <a th:href="@{/delete/{id}(id=${post.id})}">Delete</a>
+                            </div>
+                            <td><a th:href="@{/read/{id}(id=${post.id})}">Read more>></a></td>
+                            <br>
+                        </table>
+                    </div>
+                </div>
+                <br>
+            </div>
+        </section>
+        <section class="footer-page">
+            <span>
+            <a class="page-link" th:if="${currentPage > 1}"
+               th:value=${currentPage-1} th:onclick="pagePrevious('pageNo',this.value)">Previous</a>
+            <a class="page-link" th:if="${currentPage < totalPages}"
+               th:value=${currentPage+1} th:onclick="pageNext('pageNo',this.value)">Next</a>
+        </section>
+    </article>
+</main>
+</body>
+</html>

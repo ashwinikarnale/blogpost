@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="https://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Comment</title>
+    <style>
+    .element {
+        border:5px solid maroon;
+        margin-left: 50px;
+        margin-right: 600px;
+    }
+    .inner {
+        margin-left: 50px;
+    }
+    </style>
+</head>
+<body>
+<h1>Edit Comment</h1>
+<div class="element" align="center">
+    <form action="" method="post" th:action="@{'/addComment/updateComment/'+${postId}+'/'+${comment.id}}" th:object="${comment}">
+        <div class="inner" align="center">
+            <br>
+            <label>Comment:</label><br>
+            <input type="text" th:field="*{description}" required/><br/>
+            <br>
+            <input type="submit" value="Add Comment"></br>
+        </div>
+    </form>
+</div>
+</body>
+</html>

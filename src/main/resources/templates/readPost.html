@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Post</title>
+    <style>
+        .dashboard {
+        border:5px solid maroon;
+        margin-left: 800px;
+        margin-right: 100px;
+        }
+
+        .outer {
+        border:5px solid maroon;
+        margin-left: 100px;
+        margin-right: 100px;
+        }
+        .tag {
+        border:1px solid black;
+        }
+        .element {
+<!--        border:5px solid maroon;-->
+        margin-left: 50px;
+        margin-right: 600px;
+    }
+    .inner {
+        margin-left: 50px;
+    }
+    </style>
+</head>
+<body>
+<table>
+    <td><a href="/dashboard">
+        <button style="background-color:black;color:white;width:100px;height:30px;">Home</button>
+    </a></td>
+</table>
+<br><br>
+<div class="outer" align="center">
+    <div align="center"><h1><span th:text="${post.title}"></span></h1><br></div>
+    <table>
+        <tr>
+            <td>
+                Author:
+                <span th:text="${post.author}"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Published At :
+                <span th:text="${post.publishedAt}"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Tags:
+                <span th:text="${tag}"></span>
+            </td>
+        </tr>
+    </table>
+    <br><br>
+    <span th:text="${post.content}"></span><br>
+    <br><br>
+</div>
+<div align="center">
+    <h1>Comments</h1>
+    <table border="2" cellpadding="5">
+        <thead>
+        <tr align="center">
+            <td>Name</td>
+            <td>Comment</td>
+            <td>Updated at</td>
+            <td>Edit</td>
+            <td>Delete</td>
+        </tr>
+        </thead>
+        <div id="commentsInner" th:each="comment: ${comments}">
+            <tbody>
+            <tr align="center">
+                <td>
+                    <snap th:text="${comment.name}"></snap>
+                </td>
+                <td>
+                    <snap th:text="${comment.description}"></snap>
+                </td>
+                <td>
+                    <snap th:text="${comment.updatedAt}"></snap>
+                </td>
+                    <div th:if="${username} eq ${post.author} or ${username} eq ${admin}">
+                <td> <a th:href="@{'/updateCommentPage/'+${post.id}+'/'+${comment.id}}">Edit</a>
+                </td>
+                <td>
+                     <a th:href="@{'/read/delete/'+${post.id}+'/'+${comment.id}}">Delete</a>
+                </td>
+                    </div>
+                </div>
+            </tr>
+            </tbody>
+        </div>
+    </table>
+
+<h1 align="center">Add Comments</h1>
+<div align="center">
+    <form action="" method="post" th:action="@{/addComment/{postId}(postId=${post.id})}" th:object="${comment}">
+        <div class="inner">
+            <br>
+            <input type="text" th:field="*{id}" hidden>
+            <label>Name:</label>
+            <input type="text" th:field="*{name}" required/></br><br>
+            <label>Email:</label>
+            <input type="text" th:field="*{email}" required/></br><br>
+            <label>Comment:</label>
+            <input type="text" th:field="*{description}" required/></br>
+            <br>
+            <input type="submit" value="Add Comment"><br><br>
+        </div>
+    </form>
+</div>
+</div>
+</body>
+</html>

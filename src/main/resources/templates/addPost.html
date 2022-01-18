@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="https://thymeleaf.org">
+<style>
+    .element {
+    border:5px solid maroon;
+        margin-left: 500px;
+        margin-right: 500px;
+    }
+    .inner {
+        margin-left: 250px;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Add Post</title>
+</head>
+<body style="background-color:rgb(255, 255, 188);">
+<table>
+    <td><a href="/dashboard">
+        <button style="background-color:black;color:white;width:100px;height:30px;">Home</button>
+    </a></td>
+</table>
+<h2 align="center">Create Post</h2>
+<div class="element">
+    <form action="/savePost" method="post" th:action="@{/savePost}" th:object=${post}>
+        <div class="inner">
+            <br>
+            <input type="text" th:field="*{id}" hidden/>
+            <label>Title:</label><br>
+            <input type="text" th:field="*{title}" required/><br>
+            <label>Excerpt:</label><br>
+            <input type="text" th:field="*{excerpt}" required/><br>
+            <label>Author:</label><br>
+            <input type="text" th:field="*{author}" readonly/><br>
+            <label>Content:</label><br>
+            <textarea type="text" th:field="*{content}" rows="10" cols="27" required></textarea> <br>
+            <label>Tags:</label><br>
+            <input type="text" name="helperTags" placeholder="Enter Tags With , Separated " th:value = "${helperTags}" required/><br><br>
+            <input style="color:green; height:30px; width:100px" type="submit" value="Submit">
+            <br><br>
+        </div>
+    </form>
+</div>
+</body>
+</html>
+
